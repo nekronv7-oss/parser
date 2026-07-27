@@ -1,5 +1,5 @@
 services:
-  - type: background
+  - type: web_service
     name: gift-parser-bot
     env: python
     plan: starter

@@ -17,6 +17,7 @@ from telethon import TelegramClient, functions, types, errors
 from telethon.network.connection import ConnectionTcpMTProxyRandomizedIntermediate
 from telethon.tl.functions.users import GetFullUserRequest
 import aiohttp
+from aiohttp import web
 import certifi
 
 try:
@@ -177,8 +178,95 @@ logging.basicConfig(
 )
 log = logging.getLogger("GiftParser")
 
+WEB_HOST = os.getenv("WEB_HOST", "0.0.0.0")
+WEB_PORT = int(os.getenv("PORT", os.getenv("WEB_PORT", "10000")))
 
 ACTIVE_LISTINGS = {}
+
+#
+BOT_USERNAME = ""
+
+async def stats_handler(request: web.Request):
+    parser = request.app["parser"]
+    stats = parser.stats
+    active_count = len(ACTIVE_LISTINGS)
+    html_text = f"""
+    <html>
+      <head>
+        <title>Gift Parser Status</title>
+        <style>
+          body {{ font-family: Arial, sans-serif; background: #121212; color: #f5f5f5; }}
+          .container {{ max-width: 760px; margin: 40px auto; padding: 24px; background: #1d1d1d; border-radius: 16px; box-shadow: 0 16px 40px rgba(0,0,0,0.3); }}
+          h1 {{ margin-top: 0; }} .stat {{ padding: 16px; background: #282828; border-radius: 12px; margin: 12px 0; }}
+          .label {{ color: #8ab4f8; }} .value {{ font-size: 2.4rem; margin-top: 8px; }}
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Gift Parser Status</h1>
+          <p>Статистика бота на текущий момент.</p>
+          <div class="stat"><div class="label">Отправлено уведомлений о подарках</div><div class="value">{stats["notifications_sent"]}</div></div>
+          <div class="stat"><div class="label">Новых найденных подарков</div><div class="value">{stats["new_listings"]}</div></div>
+          <div class="stat"><div class="label">Подарков в обработке / активных списков</div><div class="value">{active_count}</div></div>
+          <div class="stat"><div class="label">Ошибок</div><div class="value">{stats["errors"]}</div></div>
+          <div class="stat"><div class="label">Проверок рынка</div><div class="value">{stats["checks"]}</div></div>
+          <p>Сервис запущен как <strong>{CREATOR}</strong>.</p>
+        </div>
+      </body>
+    </html>
+    """
+    return web.Response(text=html_text, content_type="text/html")
+
+async def stats_api_handler(request: web.Request):
+    parser = request.app["parser"]
+    return web.json_response({
+        "notifications_sent": parser.stats["notifications_sent"],
+        "new_listings": parser.stats["new_listings"],
+        "active_listings": len(ACTIVE_LISTINGS),
+        "errors": parser.stats["errors"],
+        "checks": parser.stats["checks"],
+    })
+
+async def health_handler(request: web.Request):
+    return web.json_response({
+        "status": "ok",
+        "active_listings": len(ACTIVE_LISTINGS),
+        "notifications_sent": request.app["parser"].stats["notifications_sent"],
+    })
+
+async def active_listings_handler(request: web.Request):
+    listing_data = []
+    for token, item in ACTIVE_LISTINGS.items():
+        listing = item.get("listing", {})
+        listing_data.append({
+            "token": token,
+            "title": listing.get("gift_name") or listing.get("title"),
+            "price": listing.get("price"),
+            "seller_id": listing.get("seller_id"),
+            "seller_name": listing.get("seller_name"),
+            "message_id": item.get("message_id"),
+            "claimed_by": item.get("claimed_by"),
+            "claimed_by_display": item.get("claimed_by_display"),
+        })
+    return web.json_response({
+        "active_listings": len(listing_data),
+        "listings": listing_data,
+    })
+
+async def run_http_server(parser):
+    app = web.Application()
+    app["parser"] = parser
+    app.router.add_get("/", stats_handler)
+    app.router.add_get("/api/stats", stats_api_handler)
+    app.router.add_get("/health", health_handler)
+    app.router.add_get("/active", active_listings_handler)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, WEB_HOST, WEB_PORT)
+    await site.start()
+    log.info(f"HTTP stats page available at http://{WEB_HOST}:{WEB_PORT}/")
+    while True:
+        await asyncio.sleep(3600)
 
 #
 BOT_USERNAME = ""
@@ -1500,7 +1588,10 @@ class GiftMarketParser:
 
 async def main():
     parser = GiftMarketParser()
-    await parser.start()
+    await asyncio.gather(
+        parser.start(),
+        run_http_server(parser),
+    )
 
 
 if __name__ == "__main__":
