@@ -98,59 +98,10 @@ POST_DELAY_MAX = int(os.getenv("POST_DELAY_MAX", "45"))
 
 
 MIN_PRICE_STARS = 0
-MAX_PRICE_STARS = 0
+MAX_PRICE_STARS = 700  # Только дешёвые подарки стоимостью до 700 звёзд
 
-
-TRACK_GIFTS = [
-    "Plush Pepe",
-    "Heart Locket",
-    "Durov's Cap",
-    "Precious Peach",
-    "Heroic Helmet",
-    "Scared Cat",
-    "Astral Shard",
-    "Mighty Arm",
-    "Loot Bag",
-    "Nail Bracelet",
-    "Westside Sign",
-    "Mini Oscar",
-    "Perfume Bottle",
-    "Ion Gem",
-    "Gem Signet",
-    "Magic Potion",
-    "Artisan Brick",
-    "Low Rider",
-    "Swiss Watch",
-    "Sharp Tongue",
-    "Kissed Frog",
-    "Bonded Ring",
-    "Toy Bear",
-    "Genie Lamp",
-    "Neko Helmet",
-    "Vintage Cigar",
-    "Voodoo Doll",
-    "Signet Ring",
-    "Diamond Ring",
-    "Electric Skull",
-    "Eternal Rose",
-    "Rare Bird",
-    "Khabib's Papakha",
-    "Bling Binky",
-    "Cupid Charm",
-    "Sky Stilettos",
-    "UFC Strike",
-    "Ionic Dryer",
-    "Love Potion",
-    "Trapped Heart",
-    "Record Player",
-    "Crystal Ball",
-    "Snoop Cigar",
-    "Flying Broom",
-    "Mad Pumpkin",
-    "Skull Flower",
-    "Valentine Box",
-    "Top Hat",
-]
+# Отключаем именной фильтр подарков, берём все дешёвые подарки.
+TRACK_GIFTS = []
 
 
 EXCLUDE_GIFTS = []
@@ -162,7 +113,7 @@ MAX_RARITY_PERCENT = 0
 ONLY_FREE_DM = True
 
 
-MAX_SELLER_LEVEL = 2
+MAX_SELLER_LEVEL = 1
 
 
 MAX_SELLER_GIFTS = 15
