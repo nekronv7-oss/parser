@@ -1,0 +1,10 @@
+.env
+gift_market.db
+gift_parser_session.session
+gift_parser_session.session-journal
+__pycache__/
+*.py[cod]
+*.pyo
+.DS_Store
+.env*
+data/
