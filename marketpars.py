@@ -90,7 +90,7 @@ CREATOR = "svigno"
 STARS_PER_TON = 130
 
 
-CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", "60"))
+CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", "20"))
 
 # Пауза между отправкой отдельных лотов в группу (чтобы не спамить пачкой).
 POST_DELAY_MIN = int(os.getenv("POST_DELAY_MIN", "30"))
