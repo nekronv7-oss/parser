@@ -655,7 +655,7 @@ def build_buttons(token: str, gift_link: str, seller_url: str) -> list:
     # Единственный рабочий способ обозначить цвет — цветной кружок-эмодзи
     # в начале подписи кнопки: 🟢 занять / 🔵 открыть лот / 🔴 продавец.
     return [
-        [{"text": "🟢 Занять", "callback_data": f"claim:{token}"}],
+        [{"text": "🟢 Занять(только для администратора)", "callback_data": f"claim:{token}"}],
         [
             {"text": "🔵 Открыть лот", "url": gift_link},
             {"text": "🔴 Продавец", "url": seller_url},
