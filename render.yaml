@@ -3,6 +3,6 @@ services:
     name: gift-parser-bot
     env: python
     plan: starter
-    branch: main
+    branch: master
     buildCommand: pip install -r requirements.txt
     startCommand: python marketpars.py
