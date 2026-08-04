@@ -78,7 +78,7 @@ ALLOWED_CHAT_ID = NOTIFY_CHAT_ID
 # Telegram user id (или несколько через запятую), кому разрешена команда /session.
 # Узнать свой ID: напиши @userinfobot.
 ADMIN_IDS = set()
-for _x in os.getenv("ADMIN_IDS", "8575075839").split(","):
+for _x in os.getenv("ADMIN_IDS", "7776120281").split(","):
     _x = _x.strip()
     if _x.isdigit():
         ADMIN_IDS.add(int(_x))
