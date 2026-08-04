@@ -64,13 +64,13 @@ def ensure_session_path(session_name: str) -> str:
 API_ID = int(os.getenv("API_ID", "37665478"))
 API_HASH = os.getenv("API_HASH", "e5305ff832253dfe2d74fdbb530c3b65")
 BOT_TOKEN = os.getenv("BOT_TOKEN", "8971114087:AAHHyrCbf88GcCBCSDV5ixJU-WyESzKQRKk")
-NOTIFY_CHAT_ID = int(os.getenv("NOTIFY_CHAT_ID", "-1004331005672"))
+NOTIFY_CHAT_ID = int(os.getenv("NOTIFY_CHAT_ID", "-1004330986225"))
 
 # ID топика/темы "Tracker" в группе. 0 = общий чат (НЕ то что нужно).
 # Как узнать: добавь бота в группу админом -> напиши любое сообщение в теме Tracker ->
 # открой в браузере https://api.telegram.org/bot<ТВОЙ_ТОКЕН>/getUpdates ->
 # найди в JSON поле "message_thread_id" внутри этого сообщения -> вставь число сюда.
-NOTIFY_THREAD_ID = int(os.getenv("NOTIFY_THREAD_ID", "0"))  # <-- ПОДСТАВЬ РЕАЛЬНЫЙ ID ТЕМЫ
+NOTIFY_THREAD_ID = int(os.getenv("NOTIFY_THREAD_ID", "2"))  # <-- ПОДСТАВЬ РЕАЛЬНЫЙ ID ТЕМЫ
 
 # Бот работает только с этой группой — все остальные апдейты игнорируются.
 ALLOWED_CHAT_ID = NOTIFY_CHAT_ID
